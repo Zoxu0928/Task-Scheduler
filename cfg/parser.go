@@ -1,11 +1,14 @@
 package cfg
 
 import (
+	"errors"
+	"github.com/BurntSushi/toml"
 	"github.com/Zoxu0928/task-common/db"
 	"github.com/Zoxu0928/task-common/http"
 	"github.com/Zoxu0928/task-common/logger"
 	"github.com/Zoxu0928/task-common/web"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"gopkg.in/go-playground/validator.v9"
 	"time"
 )
 
@@ -34,5 +37,28 @@ func init() {
 
 //读取配置文件
 func (c *Config) Load(configFile *string) error {
-	
+	if configFile == nil || *configFile == "" {
+		return c.wrapperError("config file is nil")
+	}
+	_, err := toml.DecodeFile(*configFile, c)
+	if err != nil {
+		return c.wrapperError(err.Error())
+	}
+	err = c.validate()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Config) validate() error {
+	validate := validator.New()
+	if err := validate.Struct(c); err != nil {
+		return c.wrapperError(err.Error())
+	}
+	return nil
+}
+
+func (c *Config) wrapperError(errMsg string) error {
+	return errors.New("[config] " + errMsg)
 }
