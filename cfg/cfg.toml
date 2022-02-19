@@ -1,0 +1,57 @@
+title = "Task Scheduler Configuration"
+
+[env]
+disable_gracefully_stopped = false
+
+[cluster]
+# 集群选举的周期
+# seconds
+fighting_interval = "3s"
+# 集群通过ETCD进行选举，需要定义分布式锁的prefix
+etcd_fighting_prefix = "distribute_lock/pcd/openapi"
+# 分布式锁保活的TTL
+etcd_keep_alive_ttl = "3s"
+
+[dispatcher]
+
+[scheduler]
+# 调度周期
+loop_interval = "30s"
+
+[log]
+# 日志路径，为空表示输出到console
+path = ""
+# 文件名称
+file_name = "pcd_openapi.log"
+level = "debug"
+# 日志历史保留天数
+max_history = 5
+
+[database]
+user = "root"
+password = "root"
+ip = "127.0.0.1"
+port = 3306
+db = "pcd_open_api"
+timeout = 3000
+max_connection = 300
+max_idle_connection = 50
+max_lifetime = 60
+
+[web]
+port = "8088"
+# seconds
+read_timeout = "30s"
+# seconds
+write_timeout = "30s"
+
+[http_client]
+# seconds
+timeout = "22s"
+max_idle_conns = 2000
+max_idle_conns_per_host = 300
+
+[etcd]
+username = ""
+password = ""
+endpoints = ["127.0.0.1:2379"]
