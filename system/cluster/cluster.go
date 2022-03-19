@@ -2,6 +2,7 @@ package cluster
 
 import (
 	"context"
+	"errors"
 	"github.com/Zoxu0928/task-common/distribute_mutex"
 	"sync"
 	"time"
@@ -13,6 +14,11 @@ const (
 	RoleMaster         Role   = "master"
 	RoleSlave          Role   = "slave"
 	DefaultClusterName string = "default"
+)
+
+var (
+	MutexError     = errors.New("[cluster] distribution mutex builder is nil")
+	DefaultCluster *Cluster
 )
 
 // Cluster 基于ETCD分布式锁实现的集群模式
